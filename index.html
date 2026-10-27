@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAME.VEX | Gaming Store</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <div class="brand">
+      <!-- ضع صورة اللوجو بجوار index.html وسمّها logo.png -->
+      <img src="logo.1.jpeg" alt="GAME.VEX Logo" class="site-logo">
+      <h1>GAME.<span>VEX</span></h1>
+    </div>
+
+    <div class="search">
+      <input id="searchInput" placeholder="ابحث عن لعبة..." oninput="renderAll()">
+    </div>
+
+    <button class="btn" onclick="openCart()">🛒 السلة <span id="cartCount">0</span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <h2>مغامرتك <span class="highlight">تبدأ هنا</span></h2>
+  <p>مرحبًا بك في GAME.VEX، وجهتك لاكتشاف ألعاب الكمبيوتر. اختار لعبتك المفضلة واستمتع بعروضنا وأفضل الألعاب.</p>
+  <div class="hero-tags">
+    <span class="pill">🎮 ألعاب PC</span>
+    <span class="pill">🌐 Online</span>
+    <span class="pill">🖥️ Offline</span>
+    <span class="pill">🔥 عروض مميزة</span>
+  </div>
+  <button class="btn" onclick="goTo('onlineSection')">تصفح الألعاب ↓</button>
+</section>
+
+<div class="section-head">
+  <h2>التصنيفات</h2>
+  <span class="meta">اختار القسم اللي بتحبه</span>
+</div>
+<section class="categories" id="categories"></section>
+
+<div class="section-head">
+  <h2>اختار طريقة اللعب</h2>
+  <span class="meta">تصفح الألعاب حسب النوع</span>
+</div>
+<section class="categories">
+  <button class="category" onclick="goTo('onlineSection')"><span class="emoji">🌐</span>ألعاب PC أونلاين</button>
+  <button class="category" onclick="goTo('offlineSection')"><span class="emoji">🖥️</span>ألعاب PC أوفلاين</button>
+  <button class="category" onclick="goTo('topSection')"><span class="emoji">🏆</span>أفضل 10 ألعاب</button>
+  <button class="category" onclick="goTo('offersSection')"><span class="emoji">🔥</span>عروض GAME.VEX</button>
+</section>
+
+<div class="section-head" id="catalog">
+  <h2 id="catalogTitle">كل الألعاب</h2>
+  <select id="sortSelect" onchange="renderAll()" style="width:auto;max-width:190px">
+    <option value="default">الترتيب الافتراضي</option>
+    <option value="name">الاسم</option>
+    <option value="priceLow">السعر: الأقل أولًا</option>
+    <option value="priceHigh">السعر: الأعلى أولًا</option>
+    <option value="year">الأحدث أولًا</option>
+  </select>
+</div>
+
+<section id="onlineSection">
+  <div class="section-banner online-banner">
+    <div><h2>🌐 ألعاب PC أونلاين</h2><p>اكتشف ألعاب الأونلاين المتاحة في المتجر.</p></div>
+    <span class="section-icon">🎮</span>
+  </div>
+  <main class="products" id="onlineProducts"></main>
+</section>
+
+<section id="offlineSection">
+  <div class="section-banner offline-banner">
+    <div><h2>🖥️ ألعاب PC أوفلاين</h2><p>اكتشف ألعاب القصة والمغامرات.</p></div>
+    <span class="section-icon">🎯</span>
+  </div>
+  <main class="products" id="offlineProducts"></main>
+</section>
+
+<section id="topSection">
+  <div class="section-banner feature-banner">
+    <div><h2>🏆 أفضل 10 ألعاب في GAME.VEX</h2><p>اختيارات المتجر لأفضل الألعاب.</p></div>
+    <span class="section-icon">⭐</span>
+  </div>
+  <main class="products" id="topProducts"></main>
+</section>
+
+<section id="offersSection">
+  <div class="section-banner offer-banner">
+    <div><h2>🔥 عروض GAME.VEX</h2><p>شوف الألعاب المتاحة بأسعار العروض.</p></div>
+    <span class="section-icon">🏷️</span>
+  </div>
+  <main class="products" id="offerProducts"></main>
+</section>
+
+<footer>
+  <h3>GAME.VEX</h3>
+  <div>الدفع عبر فودافون كاش: <strong style="color:white">01033002607</strong></div>
+  <div>بعد إتمام الطلب، ابعت تفاصيل الطلب على واتساب للتأكيد.</div>
+  <div>© GAME.VEX — Gaming Store</div>
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<aside class="drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="سلة المشتريات">
+  <div class="drawer-head">
+    <h2>🛒 سلة المشتريات</h2>
+    <button class="btn secondary" onclick="closeCart()" aria-label="إغلاق السلة">✕</button>
+  </div>
+
+  <div id="cartItems"></div>
+  <div class="total"><span>الإجمالي</span><span id="cartTotal">0 جنيه</span></div>
+  <p class="help">فودافون كاش: 01033002607</p>
+
+  <label for="customerName">اسمك (إجباري)</label>
+  <input id="customerName" placeholder="اكتب اسمك" autocomplete="name" required>
+
+  <label for="customerPhone">رقم هاتفك (إجباري)</label>
+  <input id="customerPhone" type="tel" placeholder="اكتب رقم هاتفك" autocomplete="tel" inputmode="tel" required>
+
+  <button class="btn" style="width:100%;margin-top:14px" onclick="checkout()">اطلب على واتساب</button>
+  <button class="btn secondary" style="width:100%;margin-top:8px" onclick="clearCart()">إفراغ السلة</button>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="1.js"></script>
+</body>
+</html>
