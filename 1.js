@@ -609,14 +609,14 @@ function checkout(){
  );
 
  const msg=[
-  "طلب جديد من GAME.VEX",
+  "مساء الخيرGAME.VEX",
   "الاسم: "+name,
   "رقم العميل: "+phone,
   "",
   ...lines,
   "",
   "الإجمالي: "+money(total),
-  "الدفع عبر فودافون كاش: "+PAYMENT_NUMBER
+  "في انتظار تأكيد الطلب"
  ].join("\n");
 
  window.open(
