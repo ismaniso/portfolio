@@ -3,13 +3,9 @@
 const WHATSAPP_NUMBER = "201033002607";
 const PAYMENT_NUMBER = "01033002607";
 
-/*
-  قائمة الألعاب التي نفذت كميتها.
-  اكتب اسم اللعبة بالضبط كما يظهر في قائمة raw.
-  مثال:
-  "Elden Ring",
-  "Forza Horizon 5"
-*/
+
+
+
 const SOLD_OUT_GAMES = [
   // "Elden Ring",
   // "Forza Horizon 5",
