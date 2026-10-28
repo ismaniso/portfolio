@@ -3,6 +3,19 @@
 const WHATSAPP_NUMBER = "201033002607";
 const PAYMENT_NUMBER = "01033002607";
 
+/*
+  قائمة الألعاب التي نفذت كميتها.
+  اكتب اسم اللعبة بالضبط كما يظهر في قائمة raw.
+  مثال:
+  "Elden Ring",
+  "Forza Horizon 5"
+*/
+const SOLD_OUT_GAMES = [
+  // "Elden Ring",
+  // "Forza Horizon 5",
+  // "Red Dead Redemption 2"
+];
+
 const STORE_SETTINGS = {
   online: {
     "THE FINALS": 300,
@@ -10,16 +23,17 @@ const STORE_SETTINGS = {
     "Battlefield 2042": 300,
     "Call of Duty: Black Ops 6": 300,
     "Palworld": 300,
-        "Call of Duty: Modern Warfare 4":2500,
-        "EA SPORTS FC 27":2100,
-            "Forza Horizon 6":250,
-    "Forza Horizon 5":220
+        "Call of Duty: Modern Warfare 4":3500,
+            "EA SPORTS FC 27":2100,
+    "Forza Horizon 6":600
 
 
   },
 
   offline: [
     "Call of Duty: Modern Warfare 4",
+    "EA SPORTS FC 26",
+    "EA SPORTS FC 27",
     "Forza Horizon 5",
     "Forza Horizon 6",
     "Elden Ring",
@@ -28,6 +42,7 @@ const STORE_SETTINGS = {
     "Marvel's Spider-Man Remastered",
     "Red Dead Redemption 2",
     "Cyberpunk 2077",
+    "Grand Theft Auto V Enhanced",
     "Resident Evil 4",
     "The Witcher 3: Wild Hunt",
     "Ghost of Tsushima DIRECTOR'S CUT",
@@ -223,6 +238,10 @@ function readJSON(key,fallback){
 let activeCategory="all";
 let cart=readJSON("gamevex_cart",{});
 
+function isSoldOut(name){
+ return SOLD_OUT_GAMES.includes(name);
+}
+
 function getOfferPrices(){
  return {...STORE_SETTINGS.offers};
 }
@@ -349,14 +368,16 @@ function getPriceForCard(g,options={}){
 function gameCard(g,options={}){
  const isOffer=options.offer===true;
  const isFeatured=options.featured===true;
+ const soldOut=isSoldOut(g.name);
  const displayPrice=getPriceForCard(g,options);
  const oldPrice=isOffer&&displayPrice<g.price?`<span class="old-price">${money(g.price)}</span>`:"";
  const priceClass=isOffer&&displayPrice<g.price?"discount-price":"";
  const modeLabel=g.mode==="online"?"أونلاين":"أوفلاين";
  const isNew=STORE_SETTINGS.newGames.includes(g.name);
 
- return `<article class="card">
+ return `<article class="card ${soldOut?"sold-out":""}">
  <div class="cover">${coverHTML(g)}
+ ${soldOut?'<div class="sold-out-overlay"><span>لقد نفذت الكمية</span></div>':""}
  ${isNew?'<span class="badge badge-new">جديد</span>':""}
  <span class="badge ${g.mode==="online"?"badge-online":"badge-offline"}" ${isNew?'style="top:43px"':""}>${modeLabel}</span>
  ${isOffer?'<span class="badge badge-offer">عرض</span>':""}
@@ -366,9 +387,10 @@ function gameCard(g,options={}){
  <h3>${escapeHTML(g.name)}</h3>
  <div class="meta">${g.year} · ${categoryInfo.find(c=>c[0]===g.cat)?.[2]||g.cat}</div>
  <div class="meta">${modeLabel}</div>
+ ${soldOut?'<div class="meta sold-out-label">لقد نفذت الكمية</div>':""}
  <div class="price ${priceClass}">${money(displayPrice)} ${oldPrice}</div>
  <div class="card-actions">
- <button class="btn" onclick="addToCart('${g.id}',${displayPrice})">+ أضف للسلة</button>
+ <button class="btn" ${soldOut?'disabled title="لقد نفذت الكمية"':""} onclick="addToCart('${g.id}',${displayPrice})">${soldOut?"نفذت الكمية":"+ أضف للسلة"}</button>
  </div>
  </div>
  </article>`;
@@ -423,6 +445,11 @@ function addToCart(id,price){
  const g=games.find(x=>x.id===id);
  if(!g)return;
 
+ if(isSoldOut(g.name)){
+  toast("عذرًا، لقد نفذت كمية اللعبة");
+  return;
+ }
+
  cart[id]=cart[id]||{qty:0,price:g.price};
  if(typeof cart[id]==="number")cart[id]={qty:cart[id],price:g.price};
 
@@ -438,7 +465,7 @@ function normalizeCart(){
  for(const id of Object.keys(cart)){
   const g=games.find(x=>x.id===id);
 
-  if(!g){
+  if(!g||isSoldOut(g.name)){
    delete cart[id];
    continue;
   }
@@ -457,6 +484,16 @@ function normalizeCart(){
 
 function changeQty(id,delta){
  if(!cart[id])return;
+
+ const g=games.find(x=>x.id===id);
+ if(g&&isSoldOut(g.name)){
+  delete cart[id];
+  saveCart();
+  updateCart();
+  toast("لقد نفذت كمية اللعبة");
+  return;
+ }
+
  cart[id].qty+=delta;
  if(cart[id].qty<=0)delete cart[id];
  saveCart();
@@ -525,6 +562,9 @@ function closeCart(){
 
 /* الاسم ورقم الهاتف إجباريان في كل طلب */
 function checkout(){
+ normalizeCart();
+ updateCart();
+
  const ids=Object.keys(cart);
 
  if(!ids.length){
