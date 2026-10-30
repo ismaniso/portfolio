@@ -21,7 +21,9 @@ const STORE_SETTINGS = {
     "Palworld": 300,
         "Call of Duty: Modern Warfare 4":3500,
             "EA SPORTS FC 27":2100,
-    "Forza Horizon 6":600
+    "Forza Horizon 6":600,
+        "Phantom Blade Zero":800
+
 
 
   },
@@ -72,15 +74,16 @@ const STORE_SETTINGS = {
     "Dragon's Dogma 2",
     "DOOM: The Dark Ages",
     "Starfield",
-    "Kingdom Come: Deliverance II"
+    "Kingdom Come: Deliverance II",
+        "Phantom Blade Zero"
+
   ],
 
   offers: {
-    "Red Dead Redemption 2": 250,
-    "God of War": 250,
-    "Forza Horizon 5": 250,
-    "Elden Ring": 250,
-    "Cyberpunk 2077": 250
+    //"Red Dead Redemption 2": 250,
+    //"God of War": 250,
+    //"Forza Horizon 5": 250,
+    //"Elden Ring": 250
   },
 
   newGames: [
@@ -93,14 +96,14 @@ const STORE_SETTINGS = {
     "Call of Duty: Black Ops 7",
     "Hades II",
     "Hollow Knight: Silksong",
-    "Split Fiction"
+    "Split Fiction",
+    "Phantom Blade Zero"
   ],
 
   featured: [
     "Red Dead Redemption 2",
     "God of War Ragnarök",
     "Elden Ring",
-    "Cyberpunk 2077",
     "Forza Horizon 5",
     "Marvel's Spider-Man Remastered",
     "Black Myth: Wukong",
@@ -111,7 +114,8 @@ const STORE_SETTINGS = {
 };
 
 const raw = [
-["Call of Duty: Modern Warfare 4",2026,"shooter",0,400],
+["Phantom Blade Zero",2026,"action",0,400],
+["Call of Duty: Modern Warfare 4",2026,"shooter",1938090,400],
 ["EA SPORTS FC 25",2024,"sports",2669320,300],
 ["EA SPORTS FC 26",2025,"sports",0,400],
 ["EA SPORTS FC 27",2026,"sports",0,400],
@@ -302,7 +306,7 @@ function toast(msg){
 
 function coverURL(g){
  if(!g.appid)return "";
- return `https://cdn.akamai.steamstatic.com/steam/apps/${g.appid}/library_600x900.jpg`;
+return `https://cdn.akamai.steamstatic.com/steam/apps/${g.appid}/library_600x900.jpg`;
 }
 
 function coverHTML(g){
